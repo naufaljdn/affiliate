@@ -45,6 +45,25 @@
     font-size:13px;
     margin-top:4px;
   }
+  
+  .search-box{
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid #2a2a2c;
+  background:#161617;
+  color:var(--text);
+  font-size:15px;
+  margin-bottom:18px;
+  outline:none;
+}
+.search-box::placeholder{ color:var(--muted); }
+.no-result{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 0;
+  font-size:14px;
+}
 
   .products{
     display:flex;
@@ -148,7 +167,8 @@
     <p>Sudah aku coba & pakai sendiri ✅</p>
   </header>
 
-  <div class="products" id="product-list"></div>
+  <input type="text" class="search-box" id="search-input" placeholder="🔍 Cari produk...">
+<div class="products" id="product-list"></div>
 
   <footer>The products above are high-quality products at the most affordable prices in 2026.</footer>
 </div>
@@ -194,8 +214,15 @@
   ];
 
   const list = document.getElementById("product-list");
+const searchInput = document.getElementById("search-input");
 
-  products.forEach((p) => {
+function renderProducts(items) {
+  list.innerHTML = "";
+  if (items.length === 0) {
+    list.innerHTML = `<div class="no-result">Produk tidak ditemukan 😔</div>`;
+    return;
+  }
+  items.forEach((p) => {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
@@ -215,6 +242,18 @@
     `;
     list.appendChild(card);
   });
+}
+
+renderProducts(products);
+
+searchInput.addEventListener("input", () => {
+  const keyword = searchInput.value.toLowerCase();
+  const filtered = products.filter(p =>
+    p.title.toLowerCase().includes(keyword) ||
+    p.tag.toLowerCase().includes(keyword)
+  );
+  renderProducts(filtered);
+});
 </script>
 
 </body>
