@@ -445,7 +445,15 @@
                          "sport"       -> Sport
                          "hiking"      -> Hiking
      - rating         : angka 0 - 5, boleh desimal (contoh 4.7)
-     - reviews        : jumlah ulasan (angka, contoh 1240)
+     - reviews        : PENTING — HARUS ANGKA MURNI, TANPA HURUF.
+                         Contoh benar : 4200, 1500, 52800
+                         Contoh SALAH : 4.2RB, 1.5rb, "4.2K"
+                         (kalau diisi huruf, seluruh website akan
+                         error total dan produk tidak muncul sama
+                         sekali — kayak yang kejadian kemarin).
+                         Tenang, tampilannya tetap otomatis disingkat
+                         jadi "4.2RB" dst di layar, kamu cukup isi
+                         angka penuhnya di sini.
      - price          : harga produk, string, contoh "Rp 360.000".
                          Kosongkan "" kalau tidak mau tampilkan harga.
      - review         : review singkat kamu tentang produk ini
@@ -462,7 +470,7 @@
       image: "https://naufaljdn.github.io/affiliate/produk1.jpg",
       category: "gaming",
       rating: 4.9,
-      reviews: 4.2RB,
+      reviews: 4200,
       price: "Rp 360.000",
       review: "Dengan 5-Layer Dampening System, typing feel-nya senyap, empuk, dan stabil. Ideal buat gaming malam hari maupun kerja fokus. Build quality solid banget buat harga segini.",
       platform: "shopee",
@@ -473,9 +481,9 @@
       image: "https://naufaljdn.github.io/affiliate/produk2.jpg",
       category: "gaming",
       rating: 4.9,
-      reviews: 2.8RB,
+      reviews: 2800,
       price: "Rp 136.000",
-      review: "Sensor 4800DPI yang telah disempurnakan untuk mendukung kecepatan tangan gamers dengan akselerasi 15g.kemampuan untuk mengolah 6000 frame per detik dan kemampuan jelajah hingga 60 inch per detik untuk membantu gamer yang memakai layar monitor besar.",
+      review: "Sensor 4800DPI yang telah disempurnakan untuk mendukung kecepatan tangan gamers dengan akselerasi 15g. Kemampuan olah 6000 frame per detik dan jelajah hingga 60 inch per detik, cocok buat gamer yang pakai layar monitor besar.",
       platform: "shopee",
       buyUrl: "https://id.shp.ee/gg7192EB"
     },
@@ -484,20 +492,20 @@
       image: "https://naufaljdn.github.io/affiliate/produk3.jpg",
       category: "gaming",
       rating: 4.9,
-      reviews: 4.7RB,
+      reviews: 4700,
       price: "Rp 235.000",
-      review: "Dipakai beberapa jam buat main masih tetap nyaman. Karakter suaranya cukup detail, jadi langkah kaki dan arah suara lawan lebih gampang didengar. Mic-nya juga jernih buat komunikasi di Discord atau in-game. Menurutku, di kelas harga segini, kualitasnya sudah sangat worth it.",
+      review: "Dipakai beberapa jam buat main masih tetap nyaman. Karakter suaranya cukup detail, jadi langkah kaki dan arah suara lawan lebih gampang didengar. Mic-nya juga jernih buat komunikasi di Discord atau in-game. Di kelas harga segini, kualitasnya sudah sangat worth it.",
       platform: "shopee",
       buyUrl: "https://id.shp.ee/kJX5B9Ja"
     },
     {
-      name: "Brush Pembersih Kyboard 7 in 1 Multifunction",
+      name: "Brush Pembersih Keyboard 7 in 1 Multifunction",
       image: "https://naufaljdn.github.io/affiliate/produk4.jpg",
       category: "accessories",
       rating: 4.9,
-      reviews: 1.5RB,
+      reviews: 1500,
       price: "Rp 17.000",
-      review: "Produk cleaning brushnya berguna dong buat bersih-bersih laptop atau PC. Tools kitnya juga lengkap ada cairan pembersih untuk monitor ada pen pembersih ada semacam puller untuk mengangkat atau mencabut tombol pda keyboard PC dan pastinya ada brushnya buat membersihkan debu yg menempel di sela-sela keyboard laptop dan PC. So far produknya OK dan benaran multifungsi.",
+      review: "Cleaning brush ini berguna banget buat bersih-bersih laptop atau PC. Tools kitnya lengkap: ada cairan pembersih monitor, pen pembersih, puller buat cabut tombol keyboard, dan brush buat debu di sela-sela keyboard. So far produknya OK dan beneran multifungsi.",
       platform: "shopee",
       buyUrl: "https://id.shp.ee/4MjR89Jh"
     },
@@ -506,9 +514,9 @@
       image: "https://naufaljdn.github.io/affiliate/produk5.jpg",
       category: "electronic",
       rating: 5.0,
-      reviews: 52.8RB,
+      reviews: 52800,
       price: "Rp 500.000",
-      review: "Build quality Huawei emang gak mengecewakan. Tracking aktivitas harian cukup akurat, baterainya tahan lama, dan layar AMOLED membuat informasi mudah dibaca. Di kelas smart band, menurut saya ini salah satu pilihan yang layak dipertimbangkan.",
+      review: "Build quality Huawei emang gak mengecewakan. Tracking aktivitas harian cukup akurat, baterainya tahan lama, dan layar AMOLED bikin informasi mudah dibaca. Di kelas smart band, ini salah satu pilihan yang layak dipertimbangkan.",
       platform: "shopee",
       buyUrl: "https://id.shp.ee/pFE8aUAz"
     },
@@ -603,6 +611,14 @@
     categoryBar.appendChild(btn);
   });
 
+  /* ---------- helper: format jumlah ulasan jadi singkatan RB / JT ---------- */
+  function formatReviewCount(n){
+    if (typeof n !== "number" || isNaN(n)) return n;
+    if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, "") + "JT";
+    if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "RB";
+    return n.toLocaleString("id-ID");
+  }
+
   /* ---------- render grid produk ---------- */
   const grid = document.getElementById("productGrid");
   const emptyState = document.getElementById("emptyState");
@@ -652,7 +668,7 @@
           <div class="rating-row">
             <span class="star-icon">★</span>
             <b>${p.rating.toFixed(1)}</b>
-            <span class="muted">(${p.reviews.toLocaleString("id-ID")} reviews)</span>
+            <span class="muted">(${formatReviewCount(p.reviews)} reviews)</span>
           </div>
           ${p.price ? `<div class="card-price">${p.price}</div>` : ""}
           ${p.review ? `<div class="card-quote">"${p.review}"</div>` : ""}
