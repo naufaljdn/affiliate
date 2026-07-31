@@ -3,330 +3,684 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rekomendasi Produk</title>
+<title>GEARLOG — Katalog Review Produk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0b0b0c;
-    --card:#161617;
-    --text:#f5f5f5;
-    --muted:#9a9a9a;
-    --tag-bg:#232324;
-    --star:#f5c542;
-    --btn:#12b76a;
-    --btn-text:#ffffff;
-  }
-  [data-theme="light"]{
-  --bg:#f5f5f5;
-  --card:#ffffff;
-  --text:#111111;
-  --muted:#666666;
-  --tag-bg:#eeeeee;
-}
+  /* ============================================================
+     GEARLOG — katalog produk review
+     Cara edit produk: scroll ke bawah ke bagian "const PRODUCTS"
+     di dalam tag <script>. Tambah / ubah data di situ.
+     ============================================================ */
 
-  *{box-sizing:border-box; margin:0; padding:0;}
+  :root{
+    --bg: #0B0D12;
+    --surface: #14161D;
+    --surface-2: #1B1E27;
+    --border: #262932;
+    --text: #F2F3F6;
+    --text-muted: #9497A3;
+    --accent-1: #8B7CFC;
+    --accent-2: #4FD1E8;
+    --accent-grad: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    --shopee: #FF5722;
+    --shopee-hover: #E64A19;
+    --tokopedia: #03AC0E;
+    --tokopedia-hover: #039009;
+    --star: #F5B942;
+    --shadow: 0 12px 30px rgba(0,0,0,.35);
+    --radius: 18px;
+  }
+
+  [data-theme="light"]{
+    --bg: #F6F6F9;
+    --surface: #FFFFFF;
+    --surface-2: #F1F1F6;
+    --border: #E6E6ED;
+    --text: #191A22;
+    --text-muted: #6E7080;
+    --shadow: 0 12px 30px rgba(25,26,34,.08);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
 
   body{
     background:var(--bg);
     color:var(--text);
-    font-family:'Poppins', -apple-system, sans-serif;
+    font-family:'Inter', sans-serif;
+    transition: background .25s ease, color .25s ease;
+    min-height:100vh;
+    padding-bottom:80px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--accent-1); color:#fff; }
+
+  h1,h2,.brand,.card-name,.card-price,.chip,.buy-btn{
+    font-family:'Sora', sans-serif;
+  }
+
+  /* ---------- Top bar / header ---------- */
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(11,13,18,.72);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-bottom:1px solid var(--border);
+  }
+  [data-theme="light"] .topbar{ background:rgba(246,246,249,.78); }
+
+  .topbar-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:18px 24px;
     display:flex;
-    justify-content:center;
-    padding:20px 12px 60px;
+    align-items:center;
+    gap:22px;
   }
 
-  .page{
-    width:100%;
-    max-width:480px;
-  }
-
-  header{
-    text-align:center;
-    padding:56px 0 24px;
-  }
-  header h1{
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    font-weight:700;
     font-size:20px;
-    font-weight:800;
+    letter-spacing:.2px;
+    white-space:nowrap;
   }
-  header p{
-    color:var(--muted);
+  .logo-mark{
+    width:34px; height:34px;
+    border-radius:9px;
+    background:var(--accent-grad);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Sora', sans-serif;
     font-size:13px;
-    margin-top:4px;
+    color:#0B0D12;
+    font-weight:800;
+    flex-shrink:0;
   }
-  
-  .search-box{
-  width:100%;
-  padding:14px 16px;
-  border-radius:14px;
-  border:1px solid #2a2a2c;
-  background:var(--card);
-  color:var(--text);
-  font-size:15px;
-  margin-bottom:18px;
-  outline:none;
-}
-.search-box::placeholder{ color:var(--muted); }
-.no-result{
-  text-align:center;
-  color:var(--muted);
-  padding:30px 0;
-  font-size:14px;
-}
-.theme-toggle{
-  position:fixed;
-  top:16px;
-  right:16px;
-  background:var(--card);
-  border:1px solid #2a2a2c;
-  color:var(--text);
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  font-size:18px;
-  cursor:pointer;
-  z-index:10;
-}
+  .logo span.sub{
+    font-family:'Inter';
+    font-weight:500;
+    font-size:11px;
+    color:var(--text-muted);
+    letter-spacing:.2px;
+    display:block;
+    margin-top:-1px;
+  }
 
-  .products{
+  .search-wrap{
+    flex:1;
+    position:relative;
+    max-width:520px;
+  }
+  .search-wrap svg{
+    position:absolute;
+    left:14px; top:50%;
+    transform:translateY(-50%);
+    width:17px; height:17px;
+    color:var(--text-muted);
+    pointer-events:none;
+  }
+  #searchInput{
+    width:100%;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:11px 14px 11px 40px;
+    border-radius:11px;
+    font-size:14.5px;
+    font-family:'Inter';
+    outline:none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  #searchInput::placeholder{ color:var(--text-muted); }
+  #searchInput:focus{
+    border-color:var(--accent-1);
+    box-shadow:0 0 0 3px rgba(139,124,252,.16);
+  }
+
+  .theme-toggle{
+    width:42px; height:42px;
+    border-radius:11px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    transition: border-color .15s ease, transform .1s ease;
+  }
+  .theme-toggle:hover{ border-color:var(--accent-1); }
+  .theme-toggle:active{ transform:scale(.93); }
+  .theme-toggle svg{ width:19px; height:19px; }
+  .theme-toggle .sun{ display:none; color:var(--star); }
+  .theme-toggle .moon{ display:block; color:var(--accent-2); }
+  [data-theme="light"] .theme-toggle .sun{ display:block; }
+  [data-theme="light"] .theme-toggle .moon{ display:none; }
+
+  /* ---------- Category chips ---------- */
+  .categories{
+    max-width:1180px;
+    margin:0 auto;
+    padding:18px 24px 12px;
     display:flex;
-    flex-direction:column;
-    gap:18px;
+    gap:10px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+    mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+    -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+  }
+  .categories::-webkit-scrollbar{ display:none; }
+  .chip{
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:.1px;
+    padding:9px 18px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--text-muted);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    transition: all .15s ease;
+    user-select:none;
+    white-space:nowrap;
+    flex:0 0 auto;
+  }
+  .chip:hover{ color:var(--text); border-color:var(--accent-1); }
+  .chip.active{
+    background:var(--accent-grad);
+    color:#0B0D12;
+    border-color:transparent;
+    box-shadow:0 4px 14px rgba(139,124,252,.32);
+  }
+
+  /* ---------- Section heading / result count ---------- */
+  .section-head{
+    max-width:1180px;
+    margin:26px auto 16px;
+    padding:0 24px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+  }
+  .section-head h1{
+    font-size:21px;
+    font-weight:700;
+    letter-spacing:.1px;
+  }
+  #resultCount{
+    font-family:'Inter', sans-serif;
+    font-size:12.5px;
+    color:var(--text-muted);
+  }
+
+  /* ---------- Grid ---------- */
+  .grid{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 24px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:20px;
   }
 
   .card{
-    background:var(--card);
-    border-radius:18px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
     overflow:hidden;
-    border:1px solid #232324;
+    display:flex;
+    flex-direction:column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:var(--shadow);
+    border-color:var(--accent-1);
   }
 
-  .card img{
+  .card-img{
+    aspect-ratio:1/1;
     width:100%;
-    display:block;
-    background:#fff;
+    background:var(--surface-2);
+    overflow:hidden;
+  }
+  .card-img img{
+    width:100%; height:100%;
     object-fit:cover;
+    display:block;
   }
 
   .card-body{
-    padding:18px 18px 22px;
+    padding:18px 18px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:11px;
+    flex:1;
   }
 
-  .tag{
+  .card-cat{
     display:inline-flex;
     align-items:center;
     gap:6px;
-    background:var(--tag-bg);
-    color:var(--text);
-    font-size:12px;
-    padding:6px 12px;
-    border-radius:20px;
-    margin-bottom:14px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text-muted);
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:11.5px;
+    letter-spacing:.2px;
+    padding:5px 11px;
+    border-radius:999px;
+    width:fit-content;
   }
 
-  .title{
-    font-size:22px;
-    font-weight:800;
-    line-height:1.25;
-    margin-bottom:10px;
+  .card-name{
+    font-weight:700;
+    font-size:17px;
+    line-height:1.3;
+    letter-spacing:.1px;
   }
 
-  .rating{
+  .rating-row{
     display:flex;
     align-items:center;
     gap:6px;
-    font-size:14px;
-    color:var(--text);
-    margin-bottom:14px;
+    font-family:'Inter', sans-serif;
+    font-size:13.5px;
   }
-  .rating .star{ color:var(--star); }
-  .rating .count{ color:var(--muted); }
+  .rating-row .star-icon{ color:var(--star); font-size:14px; }
+  .rating-row b{ font-weight:700; color:var(--text); }
+  .rating-row .muted{ color:var(--text-muted); }
 
-  .price{
-    font-size:28px;
-    font-weight:800;
-    margin-bottom:14px;
+  .card-price{
+    font-weight:700;
+    font-size:19px;
+    font-variant-numeric:tabular-nums;
   }
 
-  .quote{
-    border-left:3px solid #3a3a3c;
-    padding-left:14px;
+  .card-quote{
+    font-family:'Inter', sans-serif;
     font-style:italic;
-    color:var(--muted);
-    font-size:14.5px;
-    line-height:1.5;
-    margin-bottom:20px;
+    font-weight:400;
+    font-size:13px;
+    line-height:1.55;
+    color:var(--text-muted);
+    border-left:2px solid var(--accent-1);
+    padding-left:11px;
+    display:-webkit-box;
+    -webkit-line-clamp:4;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
   }
 
   .buy-btn{
-    display:block;
+    margin-top:auto;
     width:100%;
     text-align:center;
-    background:var(--btn);
-    color:var(--btn-text);
-    text-decoration:none;
+    padding:12px 8px;
+    border-radius:11px;
     font-weight:700;
-    font-size:16px;
-    padding:16px;
-    border-radius:14px;
+    font-size:14.5px;
+    letter-spacing:.1px;
+    color:#fff;
+    transition: filter .15s ease, transform .1s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
   }
-  .buy-btn.shopee{ background:#ee4d2d; }
-.buy-btn.tokopedia{ background:#03ac0e; }
-  .buy-btn:active{ opacity:0.85; }
+  .buy-btn:hover{ filter:brightness(1.08); }
+  .buy-btn:active{ transform:scale(.97); }
+  .buy-btn.shopee{ background:var(--shopee); }
+  .buy-btn.shopee:hover{ background:var(--shopee-hover); }
+  .buy-btn.tokopedia{ background:var(--tokopedia); }
+  .buy-btn.tokopedia:hover{ background:var(--tokopedia-hover); }
+  .buy-btn.disabled{
+    background:var(--surface-2);
+    color:var(--text-muted);
+    cursor:default;
+    pointer-events:none;
+    border:1px solid var(--border);
+  }
+
+  .empty-state{
+    max-width:1180px;
+    margin:60px auto;
+    padding:0 24px;
+    text-align:center;
+    color:var(--text-muted);
+    font-family:'Sora', sans-serif;
+    font-size:18px;
+    font-weight:600;
+  }
 
   footer{
     text-align:center;
-    color:var(--muted);
+    color:var(--text-muted);
     font-size:12px;
-    margin-top:30px;
+    margin-top:50px;
+    font-family:'Inter', sans-serif;
+  }
+
+  /* ---------- Accessibility ---------- */
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline:2px solid var(--accent-2);
+    outline-offset:2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+
+  @media (max-width:640px){
+    .topbar-inner{ flex-wrap:wrap; }
+    .logo{ order:1; }
+    .theme-toggle{ order:2; margin-left:auto; }
+    .search-wrap{ order:3; max-width:100%; flex-basis:100%; }
   }
 </style>
 </head>
-<body>
+<body data-theme="dark">
 
-<button class="theme-toggle" id="theme-toggle">🌙</button>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo">
+        <div class="logo-mark">GG</div>
+        <div>
+          GEARLOG
+          <span class="sub">Katalog review produk</span>
+        </div>
+      </div>
 
-<div class="page">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Cari produk yang pernah direview...">
+      </div>
 
-  <!-- ===== GANTI: judul halaman kamu ===== -->
-  <header>
-    <h1>Rekomendasi Gear Favoritku</h1>
-    <p>Sudah aku coba & pakai sendiri ✅</p>
+      <button class="theme-toggle" id="themeToggle" aria-label="Ganti mode tampilan">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
+
+    <div class="categories" id="categoryBar"></div>
   </header>
 
-  <input type="text" class="search-box" id="search-input" placeholder="🔍 Cari produk...">
-<div class="products" id="product-list"></div>
+  <div class="section-head">
+    <h1 id="sectionTitle">Semua Produk</h1>
+    <span id="resultCount"></span>
+  </div>
 
-  <footer>The products above are high-quality products at the most affordable prices in 2026.</footer>
-</div>
+  <div class="grid" id="productGrid"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">Produk tidak ditemukan. Coba kata kunci atau kategori lain.</div>
+
+  <footer>GEARLOG — dibuat untuk katalog review produk</footer>
 
 <script>
-  // ======================================================
-  // EDIT DI SINI SAJA: tambah/hapus/ubah produk kamu
-  // ======================================================
-  const products = [
+  /* ============================================================
+     DATA PRODUK
+     ------------------------------------------------------------
+     Edit / tambah produk di array PRODUCTS di bawah ini.
+     Field yang bisa diisi per produk:
+
+     - name           : nama produk (string)
+     - image          : URL foto produk (string). Ganti dengan
+                         link foto asli produk kamu.
+     - category       : salah satu dari:
+                         "gaming"      -> Gaming Essential
+                         "electronic"  -> Electronic
+                         "accessories" -> Accessories
+                         "sport"       -> Sport
+                         "hiking"      -> Hiking
+     - rating         : angka 0 - 5, boleh desimal (contoh 4.7)
+     - reviews        : jumlah ulasan (angka, contoh 1240)
+     - price          : harga produk, string, contoh "Rp 360.000".
+                         Kosongkan "" kalau tidak mau tampilkan harga.
+     - review         : review singkat kamu tentang produk ini
+                         (1-2 kalimat, akan tampil miring/italic).
+     - platform       : toko tempat kamu naruh link beli.
+                         isi "shopee" atau "tokopedia" saja
+                         (cuma 1 tombol yang akan muncul).
+     - buyUrl         : link produk di toko yang dipilih di atas.
+     ============================================================ */
+
+  const PRODUCTS = [
     {
-      tag: "🎯 Competitive Gaming",
+      name: "Ajazz AK820 Monochrome V2 75% Mechanical Keyboard",
       image: "https://naufaljdn.github.io/affiliate/produk1.jpg",
-      title: "Ajazz AK820 Monochrome V2 75% Mechanical Keyboard",
-      rating: "4.9",
-      reviewCount: "4.2k reviews",
+      category: "gaming",
+      rating: 4.9,
+      reviews: 4200,
       price: "Rp 360.000",
-      quote: "Dengan 5-Layer Dampening System memberikan typing feel yang senyap, empuk & stabil, ideal untuk gaming malam hari maupun kerja fokus. Desain elegant dengan Layout 75% + Volume Knob, build quality juga solid parah buat harga segini.",
-      buttonText: "Buy on Shopee",
-      link: "https://id.shp.ee/ohtsDuNr"
+      review: "Dengan 5-Layer Dampening System, typing feel-nya senyap, empuk, dan stabil. Ideal buat gaming malam hari maupun kerja fokus. Build quality solid banget buat harga segini.",
+      platform: "shopee",
+      buyUrl: "https://shopee.co.id/"
     },
     {
-      tag: "🎯 Competitive Gaming",
-      image: "https://naufaljdn.github.io/affiliate/produk2.jpg",
-      title: "Fantech THOR X9 Gaming Mouse Macro",
-      rating: "4.9",
-      reviewCount: "2.8k reviews",
-      price: "Rp 130.000",
-      quote: "Fantech X9 Thor yang dipersenjatai dengan sensor generasi ketiga dari Fantech. Sensor 4800DPI yang telah disempurnakan untuk mendukung kecepatan tangan gamers dengan akselerasi 15g. kemampuan untuk mengolah 6000 frame per detik dan kemampuan jelajah hingga 60 inch per detik untuk membantu gamer yang memakai layar monitor besar.",
-      buttonText: "Buy on Shopee",
-      link: "https://id.shp.ee/gg7192EB"
+      name: "Gaming Mouse Wireless Lightweight",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "gaming",
+      rating: 4.6,
+      reviews: 892,
+      price: "Rp 245.000",
+      review: "Ringan banget di tangan, cocok buat main FPS yang butuh flick cepat. Baterai awet, sensor akurat, gak ada delay sama sekali selama gua pakai.",
+      platform: "shopee",
+      buyUrl: "https://shopee.co.id/"
     },
     {
-      tag: "🎯 Competitive Gaming",
-      image: "https://naufaljdn.github.io/affiliate/produk3.jpg",
-      title: "dbE GM190 7.1 Virtual Surround Gaming Headphone",
-      rating: "4.9",
-      reviewCount: "4.7k reviews",
-      price: "Rp 226.000",
-      quote: "Dipakai beberapa jam buat main masih tetap nyaman. Dilengkapi dengan fitur Virtual Surround karakter suaranya cukup detail, jadi langkah kaki dan arah suara lawan lebih gampang didengar. Mic-nya juga jernih buat komunikasi di Discord atau in-game. Menurutku, di kelas harga segini, kualitasnya sudah sangat worth it.",
-      buttonText: "Buy on Shopee",
-      link: "https://id.shp.ee/kJX5B9Ja"
+      name: "Portable SSD 1TB USB-C",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "electronic",
+      rating: 4.9,
+      reviews: 2310,
+      price: "Rp 890.000",
+      review: "Transfer speednya kenceng, bodinya kecil jadi enak dibawa kemana-mana buat backup footage stream. Worth banget buat konten kreator.",
+      platform: "tokopedia",
+      buyUrl: "https://www.tokopedia.com/"
     },
     {
-      tag: "💻 Desk Accessories",
-      image: "https://naufaljdn.github.io/affiliate/produk4.jpg",
-      title: "Brush Pembersih 7 in 1 Multifunction",
-      rating: "4.9",
-      reviewCount: "1.5k reviews",
-      price: "Rp 17.000",
-      quote: "Produk cleaning brushnya berguna dong buat bersih-bersih laptop atau PC. Tools kitnya juga lengkap ada cairan pembersih untuk monitor ada pen pembersih ada semacam tweezer untuk mengangkat atau mencabut tombol pda keyboard PC dan pastinya ada brushnya buat membersihkan debu yg menempel di sela-sela keyboard laptop dan PC. So far produknya OK dan benaran multifungsi.",
-      buttonText: "Buy on Shopee",
-      link: "https://id.shp.ee/4MjR89Jh"
+      name: "Power Bank 20000mAh Fast Charging",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "electronic",
+      rating: 4.5,
+      reviews: 1567,
+      price: "Rp 275.000",
+      review: "Ngecas HP dari 0 ke 100% dua kali masih sisa. Fast charging-nya beneran cepet, bodi juga gak terlalu berat buat dibawa event offline.",
+      platform: "tokopedia",
+      buyUrl: "https://www.tokopedia.com/"
     },
     {
-      tag: "💻 Desk Accessories",
-      image: "https://naufaljdn.github.io/affiliate/produk4.jpg",
-      title: "Brush Pembersih 7 in 1 Multifunction",
-      rating: "4.9",
-      reviewCount: "1.5k reviews",
-      price: "Rp 17.000",
-      quote: "Produk cleaning brushnya berguna dong buat bersih-bersih laptop atau PC. Tools kitnya juga lengkap ada cairan pembersih untuk monitor ada pen pembersih ada semacam tweezer untuk mengangkat atau mencabut tombol pda keyboard PC dan pastinya ada brushnya buat membersihkan debu yg menempel di sela-sela keyboard laptop dan PC. So far produknya OK dan benaran multifungsi.",
-      buttonText: "Buy on Shopee",
-      link: "https://id.shp.ee/4MjR89Jh"
+      name: "Headset Gaming Surround 7.1",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "accessories",
+      rating: 4.7,
+      reviews: 980,
+      price: "Rp 410.000",
+      review: "Footstep di game FPS jadi kedengaran jelas arahnya, empuk dipakai lama buat sesi stream 5-6 jam tanpa bikin kuping panas.",
+      platform: "shopee",
+      buyUrl: "https://shopee.co.id/"
     },
     {
-      tag: "💻 Desk Accessories",
-      image: "https://naufaljdn.github.io/affiliate/produk4.jpg",
-      title: "Brush Pembersih 7 in 1 Multifunction",
-      rating: "4.9",
-      reviewCount: "1.5k reviews",
-      price: "Rp 17.000",
-      quote: "Produk cleaning brushnya berguna dong buat bersih-bersih laptop atau PC. Tools kitnya juga lengkap ada cairan pembersih untuk monitor ada pen pembersih ada semacam tweezer untuk mengangkat atau mencabut tombol pda keyboard PC dan pastinya ada brushnya buat membersihkan debu yg menempel di sela-sela keyboard laptop dan PC. So far produknya OK dan benaran multifungsi.",
-      buttonText: "Buy on Shopee",
-      link: "https://id.shp.ee/4MjR89Jh"
+      name: "Phone Cooling Clip Fan",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "accessories",
+      rating: 4.3,
+      reviews: 421,
+      price: "Rp 95.000",
+      review: "Turunin suhu HP lumayan signifikan pas main game berat lama. Suara kipasnya juga gak berisik, pas buat mobile gaming.",
+      platform: "shopee",
+      buyUrl: "https://shopee.co.id/"
+    },
+    {
+      name: "Resistance Band Set Latihan",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "sport",
+      rating: 4.6,
+      reviews: 745,
+      price: "Rp 120.000",
+      review: "Bahan elastisnya tebal dan gak gampang molor, cocok buat latihan di rumah sela-sela jadwal streaming yang padat.",
+      platform: "tokopedia",
+      buyUrl: "https://www.tokopedia.com/"
+    },
+    {
+      name: "Botol Minum Olahraga 1L Insulated",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "sport",
+      rating: 4.4,
+      reviews: 612,
+      price: "Rp 135.000",
+      review: "Air tetap dingin sampai belasan jam, desain leak-proof jadi aman ditaruh di dalam tas tanpa takut bocor.",
+      platform: "tokopedia",
+      buyUrl: "https://www.tokopedia.com/"
+    },
+    {
+      name: "Tas Carrier Hiking 45L Waterproof",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "hiking",
+      rating: 4.9,
+      reviews: 1105,
+      price: "Rp 520.000",
+      review: "Ruang penyimpanannya luas dan tertata, rain cover bawaan beneran nyelamatin barang pas hujan deras waktu naik gunung.",
+      platform: "shopee",
+      buyUrl: "https://shopee.co.id/"
+    },
+    {
+      name: "Sepatu Trekking Anti Slip",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "hiking",
+      rating: 4.7,
+      reviews: 833,
+      price: "Rp 385.000",
+      review: "Grip-nya kuat banget di jalur licin dan berbatu, sol empuk jadi kaki gak cepat capek meski dipakai trekking seharian.",
+      platform: "shopee",
+      buyUrl: "https://shopee.co.id/"
     }
   ];
 
-  const list = document.getElementById("product-list");
-const searchInput = document.getElementById("search-input");
+  /* ============================================================
+     Kategori yang ditampilkan sebagai tombol filter
+     ============================================================ */
+  const CATEGORIES = [
+    { key: "all",         label: "All",              icon: "🗂️" },
+    { key: "gaming",      label: "Gaming Essential",  icon: "🎮" },
+    { key: "electronic",  label: "Electronic",        icon: "💻" },
+    { key: "accessories", label: "Accessories",       icon: "🎧" },
+    { key: "sport",       label: "Sport",             icon: "⚽" },
+    { key: "hiking",      label: "Hiking",            icon: "🥾" }
+  ];
 
-function renderProducts(items) {
-  list.innerHTML = "";
-  if (items.length === 0) {
-    list.innerHTML = `<div class="no-result">Produk tidak ditemukan 😔</div>`;
-    return;
-  }
-  items.forEach((p) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <img src="${p.image}" alt="${p.title}">
-      <div class="card-body">
-        <span class="tag">${p.tag}</span>
-        <div class="title">${p.title}</div>
-        <div class="rating">
-          <span class="star">★</span>
-          <span>${p.rating}</span>
-          <span class="count">(${p.reviewCount})</span>
-        </div>
-        <div class="price">${p.price}</div>
-        <div class="quote">"${p.quote}"</div>
-        <a class="buy-btn ${p.buttonText.toLowerCase().includes('shopee') ? 'shopee' : p.buttonText.toLowerCase().includes('tokopedia') ? 'tokopedia' : ''}" href="${p.link}" target="_blank" rel="noopener noreferrer sponsored">${p.buttonText}</a>
-      </div>
-    `;
-    list.appendChild(card);
+  const CATEGORY_LABEL = Object.fromEntries(CATEGORIES.map(c => [c.key, c.label]));
+  const CATEGORY_ICON = Object.fromEntries(CATEGORIES.map(c => [c.key, c.icon]));
+
+  let activeCategory = "all";
+  let searchQuery = "";
+
+  /* ---------- render kategori chips ---------- */
+  const categoryBar = document.getElementById("categoryBar");
+  CATEGORIES.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.className = "chip" + (cat.key === activeCategory ? " active" : "");
+    btn.dataset.key = cat.key;
+    btn.innerHTML = `<span>${cat.icon}</span><span>${cat.label}</span>`;
+    btn.addEventListener("click", () => {
+      activeCategory = cat.key;
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    });
+    categoryBar.appendChild(btn);
   });
-}
 
-renderProducts(products);
+  /* ---------- render grid produk ---------- */
+  const grid = document.getElementById("productGrid");
+  const emptyState = document.getElementById("emptyState");
+  const resultCount = document.getElementById("resultCount");
+  const sectionTitle = document.getElementById("sectionTitle");
 
-searchInput.addEventListener("input", () => {
-  const keyword = searchInput.value.toLowerCase();
-  const filtered = products.filter(p =>
-    p.title.toLowerCase().includes(keyword) ||
-    p.tag.toLowerCase().includes(keyword)
-  );
-  renderProducts(filtered);
-});
-const themeBtn = document.getElementById("theme-toggle");
-const savedTheme = localStorage.getItem("theme") || "dark";
-document.documentElement.setAttribute("data-theme", savedTheme);
-themeBtn.textContent = savedTheme === "light" ? "☀️" : "🌙";
+  function render(){
+    const q = searchQuery.trim().toLowerCase();
 
-themeBtn.addEventListener("click", () => {
-  const current = document.documentElement.getAttribute("data-theme");
-  const next = current === "light" ? "dark" : "light";
-  document.documentElement.setAttribute("data-theme", next);
-  localStorage.setItem("theme", next);
-  themeBtn.textContent = next === "light" ? "☀️" : "🌙";
-});
+    const filtered = PRODUCTS.filter(p => {
+      const matchCategory = activeCategory === "all" || p.category === activeCategory;
+      const matchSearch = p.name.toLowerCase().includes(q);
+      return matchCategory && matchSearch;
+    });
+
+    sectionTitle.textContent = activeCategory === "all" ? "Semua Produk" : CATEGORY_LABEL[activeCategory];
+    resultCount.textContent = `${filtered.length} produk`;
+
+    grid.innerHTML = "";
+
+    if (filtered.length === 0){
+      emptyState.style.display = "block";
+      return;
+    }
+    emptyState.style.display = "none";
+
+    filtered.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      let buyButtonHtml;
+      if (p.platform === "shopee" && p.buyUrl){
+        buyButtonHtml = `<a class="buy-btn shopee" href="${p.buyUrl}" target="_blank" rel="noopener noreferrer">Beli di Shopee</a>`;
+      } else if (p.platform === "tokopedia" && p.buyUrl){
+        buyButtonHtml = `<a class="buy-btn tokopedia" href="${p.buyUrl}" target="_blank" rel="noopener noreferrer">Beli di Tokopedia</a>`;
+      } else {
+        buyButtonHtml = `<span class="buy-btn disabled">Link belum tersedia</span>`;
+      }
+
+      card.innerHTML = `
+        <div class="card-img">
+          <img src="${p.image}" alt="${p.name}" loading="lazy">
+        </div>
+        <div class="card-body">
+          <span class="card-cat">${CATEGORY_ICON[p.category] || ""} ${CATEGORY_LABEL[p.category] || p.category}</span>
+          <div class="card-name">${p.name}</div>
+          <div class="rating-row">
+            <span class="star-icon">★</span>
+            <b>${p.rating.toFixed(1)}</b>
+            <span class="muted">(${p.reviews.toLocaleString("id-ID")} reviews)</span>
+          </div>
+          ${p.price ? `<div class="card-price">${p.price}</div>` : ""}
+          ${p.review ? `<div class="card-quote">"${p.review}"</div>` : ""}
+          ${buyButtonHtml}
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    searchQuery = e.target.value;
+    render();
+  });
+
+  /* ---------- dark / light mode ---------- */
+  const themeToggle = document.getElementById("themeToggle");
+  const body = document.body;
+
+  const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+  body.setAttribute("data-theme", prefersLight ? "light" : "dark");
+
+  themeToggle.addEventListener("click", () => {
+    const current = body.getAttribute("data-theme");
+    body.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+  });
+
+  render();
 </script>
-
 </body>
 </html>
