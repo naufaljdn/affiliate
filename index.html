@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEARLOG — Katalog Review Produk</title>
+<title>GEARLOG.ID — Katalog Review Produk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -366,6 +366,193 @@
     font-weight:600;
   }
 
+  /* ---------- About section ---------- */
+  .about{
+    max-width:1180px;
+    margin:22px auto 0;
+    padding:0 24px;
+  }
+  .about-inner{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    position:relative;
+    overflow:hidden;
+  }
+  .about-inner::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:var(--accent-grad);
+    opacity:.06;
+    pointer-events:none;
+  }
+  .about-avatar{
+    width:64px; height:64px;
+    border-radius:50%;
+    background:var(--accent-grad);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Sora', sans-serif;
+    font-weight:800;
+    font-size:22px;
+    color:#0B0D12;
+    flex-shrink:0;
+    overflow:hidden;
+  }
+  .about-avatar img{
+    width:100%; height:100%;
+    object-fit:cover;
+  }
+  .about-text{ flex:1; min-width:220px; }
+  .about-name{
+    font-family:'Sora', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .about-tagline{
+    font-size:12.5px;
+    color:var(--text-muted);
+    margin-top:2px;
+  }
+  .about-bio{
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--text-muted);
+    margin-top:10px;
+    max-width:640px;
+  }
+  .about-socials{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+  }
+  .about-socials a{
+    font-size:12.5px;
+    font-weight:600;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--surface-2);
+    color:var(--text);
+    transition: border-color .15s ease, transform .1s ease;
+  }
+  .about-socials a:hover{ border-color:var(--accent-1); transform:translateY(-1px); }
+
+  /* ---------- Skeleton loading ---------- */
+  .skeleton-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .skeleton-shimmer{
+    position:relative;
+    overflow:hidden;
+    background:var(--surface-2);
+  }
+  .skeleton-shimmer::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    transform:translateX(-100%);
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+    animation: shimmer 1.4s infinite;
+  }
+  [data-theme="light"] .skeleton-shimmer::after{
+    background:linear-gradient(90deg, transparent, rgba(0,0,0,.05), transparent);
+  }
+  @keyframes shimmer{
+    100%{ transform:translateX(100%); }
+  }
+  .skeleton-img{ aspect-ratio:1/1; width:100%; }
+  .skeleton-body{ padding:18px; display:flex; flex-direction:column; gap:10px; }
+  .skeleton-line{ height:12px; border-radius:6px; }
+  .skeleton-line.w-70{ width:70%; }
+  .skeleton-line.w-40{ width:40%; }
+  .skeleton-line.w-100{ width:100%; }
+  .skeleton-btn{ height:40px; border-radius:11px; margin-top:8px; }
+
+  /* image fade-in once loaded */
+  .card-img img{ opacity:0; transition:opacity .35s ease; }
+  .card-img img.loaded{ opacity:1; }
+
+  /* ---------- Detail modal ---------- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(6,7,11,.6);
+    backdrop-filter:blur(4px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .modal-overlay.open{ opacity:1; pointer-events:auto; }
+  .modal-box{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    max-width:640px;
+    width:100%;
+    max-height:88vh;
+    overflow-y:auto;
+    transform:translateY(16px) scale(.98);
+    transition:transform .2s ease;
+  }
+  .modal-overlay.open .modal-box{ transform:translateY(0) scale(1); }
+  .modal-img{
+    width:100%;
+    aspect-ratio:16/10;
+    background:var(--surface-2);
+    overflow:hidden;
+  }
+  .modal-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .modal-body{ padding:24px; display:flex; flex-direction:column; gap:12px; position:relative; }
+  .modal-close{
+    position:absolute;
+    top:-46px; right:0;
+    width:36px; height:36px;
+    border-radius:50%;
+    background:rgba(20,22,29,.7);
+    border:1px solid var(--border);
+    color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size:18px;
+    line-height:1;
+  }
+  .modal-name{ font-family:'Sora', sans-serif; font-weight:700; font-size:21px; line-height:1.3; }
+  .modal-price{ font-family:'Sora', sans-serif; font-weight:700; font-size:24px; }
+  .modal-review{
+    font-size:14px;
+    line-height:1.7;
+    color:var(--text-muted);
+    border-left:2px solid var(--accent-1);
+    padding-left:13px;
+    font-style:italic;
+  }
+  .modal-buy{ margin-top:6px; }
+
+  @media (max-width:640px){
+    .about-inner{ padding:18px; }
+    .modal-close{ top:10px; right:10px; background:rgba(6,7,11,.55); }
+  }
+
   footer{
     text-align:center;
     color:var(--text-muted);
@@ -399,8 +586,8 @@
       <div class="logo">
         <div class="logo-mark">GG</div>
         <div>
-          GEARLOG
-          <span class="sub">Katalog review produk</span>
+          GEARLOG.ID
+          <span class="sub">katalog review produk by naufaljdn</span>
         </div>
       </div>
 
@@ -415,8 +602,11 @@
       </button>
     </div>
 
-    <div class="categories" id="categoryBar"></div>
   </header>
+
+  <div class="about" id="aboutSection"></div>
+
+  <div class="categories" id="categoryBar"></div>
 
   <div class="section-head">
     <h1 id="sectionTitle">Semua Produk</h1>
@@ -426,7 +616,24 @@
   <div class="grid" id="productGrid"></div>
   <div class="empty-state" id="emptyState" style="display:none;">Produk tidak ditemukan. Coba kata kunci atau kategori lain.</div>
 
-  <footer>GEARLOG — dibuat untuk katalog review produk</footer>
+  <footer>GEARLOG.ID — dibuat untuk katalog review produk</footer>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalName">
+      <button class="modal-close" id="modalClose" aria-label="Tutup">✕</button>
+      <div class="modal-img">
+        <img id="modalImg" src="" alt="">
+      </div>
+      <div class="modal-body">
+        <span class="card-cat" id="modalCat"></span>
+        <div class="modal-name" id="modalName"></div>
+        <div class="rating-row" id="modalRating"></div>
+        <div class="modal-price" id="modalPrice"></div>
+        <div class="modal-review" id="modalReview"></div>
+        <div id="modalBuy" class="modal-buy"></div>
+      </div>
+    </div>
+  </div>
 
 <script>
   /* ============================================================
@@ -463,6 +670,30 @@
                          (cuma 1 tombol yang akan muncul).
      - buyUrl         : link produk di toko yang dipilih di atas.
      ============================================================ */
+
+  /* ============================================================
+     TENTANG GUA
+     ------------------------------------------------------------
+     Edit info di bawah ini buat tampil di section "Tentang Gua".
+     - initials  : 2 huruf buat avatar bulat (contoh "NJ")
+     - name      : nama / nama panggung kamu
+     - tagline   : deskripsi singkat (1 baris)
+     - bio       : deskripsi lebih panjang (1-3 kalimat)
+     - socials   : daftar link sosial media, boleh nambah/kurang.
+                   label bebas, url isi link asli kamu.
+     ============================================================ */
+  const ABOUT_ME = {
+    initials: "NJ",
+    avatarImage: "", // isi link foto kamu di sini, contoh: "https://naufaljdn.github.io/affiliate/profil.jpg"
+                      // kalau dikosongin "", yang muncul cuma inisial di atas
+    name: "Naufal.jdn",
+    tagline: "Streamer & Affiliate — gaming, elektronik, hiking",
+    bio: "Produk di katalog ini sudah gua pakai dan review sendiri sebelum direkomendasikan.",
+    socials: [
+      { label: "Instagram", url: "#" },
+      { label: "TikTok", url: "#" }
+    ]
+  };
 
   const PRODUCTS = [
     {
@@ -521,15 +752,15 @@
       buyUrl: "https://id.shp.ee/pFE8aUAz"
     },
     {
-      name: "Axioo Hype 7 AMD X7-2 Ryzen 7 5825U",
-      image: "https://naufaljdn.github.io/affiliate/produk6.jpg",
-      category: "electronic",
-      rating: 4.9,
-      reviews: 135,
-      price: "Rp 7.800.000",
-      review: "Di harga segini sudah dapat Ryzen 7 5825U dengan 8 Core 16 Thread menurut saya cukup menarik. Performanya responsif, multitasking lancar, dan SSD NVMe bikin laptop terasa sat-set dipakai sehari-hari. Cocok buat kuliah, kerja, maupun gaming tipis-tipis.",
+      name: "Phone Cooling Clip Fan",
+      image: "https://placehold.co/500x500/1B1E27/9497A3?text=Foto+Produk",
+      category: "accessories",
+      rating: 4.3,
+      reviews: 421,
+      price: "Rp 95.000",
+      review: "Turunin suhu HP lumayan signifikan pas main game berat lama. Suara kipasnya juga gak berisik, pas buat mobile gaming.",
       platform: "shopee",
-      buyUrl: "https://id.shp.ee/pwekiM2s"
+      buyUrl: "https://shopee.co.id/"
     },
     {
       name: "Resistance Band Set Latihan",
@@ -611,6 +842,21 @@
     categoryBar.appendChild(btn);
   });
 
+  /* ---------- render section "Tentang Gua" ---------- */
+  document.getElementById("aboutSection").innerHTML = `
+    <div class="about-inner">
+      <div class="about-avatar">${ABOUT_ME.avatarImage ? `<img src="${ABOUT_ME.avatarImage}" alt="${ABOUT_ME.name}">` : ABOUT_ME.initials}</div>
+      <div class="about-text">
+        <div class="about-name">${ABOUT_ME.name}</div>
+        <div class="about-tagline">${ABOUT_ME.tagline}</div>
+        <div class="about-bio">${ABOUT_ME.bio}</div>
+        <div class="about-socials">
+          ${ABOUT_ME.socials.map(s => `<a href="${s.url}" target="_blank" rel="noopener noreferrer">${s.label}</a>`).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+
   /* ---------- helper: format jumlah ulasan jadi singkatan RB / JT ---------- */
   function formatReviewCount(n){
     if (typeof n !== "number" || isNaN(n)) return n;
@@ -624,6 +870,77 @@
   const emptyState = document.getElementById("emptyState");
   const resultCount = document.getElementById("resultCount");
   const sectionTitle = document.getElementById("sectionTitle");
+
+  /* ---------- skeleton loading ---------- */
+  function renderSkeletons(count){
+    grid.innerHTML = "";
+    emptyState.style.display = "none";
+    resultCount.textContent = "";
+    for (let i = 0; i < count; i++){
+      const sk = document.createElement("div");
+      sk.className = "skeleton-card";
+      sk.innerHTML = `
+        <div class="skeleton-img skeleton-shimmer"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line skeleton-shimmer w-40" style="height:18px;border-radius:999px;width:90px;"></div>
+          <div class="skeleton-line skeleton-shimmer w-100" style="height:16px;"></div>
+          <div class="skeleton-line skeleton-shimmer w-70"></div>
+          <div class="skeleton-line skeleton-shimmer w-40"></div>
+          <div class="skeleton-btn skeleton-shimmer"></div>
+        </div>
+      `;
+      grid.appendChild(sk);
+    }
+  }
+
+  /* ---------- detail modal ---------- */
+  const modalOverlay = document.getElementById("modalOverlay");
+  let lastFocusedEl = null;
+
+  function openModal(p){
+    lastFocusedEl = document.activeElement;
+    document.getElementById("modalImg").src = p.image;
+    document.getElementById("modalImg").alt = p.name;
+    document.getElementById("modalCat").textContent = `${CATEGORY_ICON[p.category] || ""} ${CATEGORY_LABEL[p.category] || p.category}`;
+    document.getElementById("modalName").textContent = p.name;
+    document.getElementById("modalRating").innerHTML = `
+      <span class="star-icon">★</span>
+      <b>${p.rating.toFixed(1)}</b>
+      <span class="muted">(${formatReviewCount(p.reviews)} reviews)</span>
+    `;
+    document.getElementById("modalPrice").textContent = p.price || "";
+    document.getElementById("modalPrice").style.display = p.price ? "block" : "none";
+    document.getElementById("modalReview").textContent = p.review ? `"${p.review}"` : "";
+    document.getElementById("modalReview").style.display = p.review ? "block" : "none";
+
+    let buyHtml;
+    if (p.platform === "shopee" && p.buyUrl){
+      buyHtml = `<a class="buy-btn shopee" href="${p.buyUrl}" target="_blank" rel="noopener noreferrer">Beli di Shopee</a>`;
+    } else if (p.platform === "tokopedia" && p.buyUrl){
+      buyHtml = `<a class="buy-btn tokopedia" href="${p.buyUrl}" target="_blank" rel="noopener noreferrer">Beli di Tokopedia</a>`;
+    } else {
+      buyHtml = `<span class="buy-btn disabled">Link belum tersedia</span>`;
+    }
+    document.getElementById("modalBuy").innerHTML = buyHtml;
+
+    modalOverlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+    document.getElementById("modalClose").focus();
+  }
+
+  function closeModal(){
+    modalOverlay.classList.remove("open");
+    document.body.style.overflow = "";
+    if (lastFocusedEl) lastFocusedEl.focus();
+  }
+
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  modalOverlay.addEventListener("click", (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modalOverlay.classList.contains("open")) closeModal();
+  });
 
   function render(){
     const q = searchQuery.trim().toLowerCase();
@@ -648,6 +965,7 @@
     filtered.forEach(p => {
       const card = document.createElement("div");
       card.className = "card";
+      card.style.cursor = "pointer";
 
       let buyButtonHtml;
       if (p.platform === "shopee" && p.buyUrl){
@@ -675,6 +993,17 @@
           ${buyButtonHtml}
         </div>
       `;
+
+      // fade-in gambar begitu selesai loading
+      const imgEl = card.querySelector(".card-img img");
+      imgEl.addEventListener("load", () => imgEl.classList.add("loaded"));
+      if (imgEl.complete) imgEl.classList.add("loaded");
+
+      // klik card (selain tombol beli) buka detail modal
+      card.addEventListener("click", () => openModal(p));
+      const buyEl = card.querySelector(".buy-btn");
+      if (buyEl) buyEl.addEventListener("click", (e) => e.stopPropagation());
+
       grid.appendChild(card);
     });
   }
@@ -696,7 +1025,8 @@
     body.setAttribute("data-theme", current === "dark" ? "light" : "dark");
   });
 
-  render();
+  renderSkeletons(6);
+  setTimeout(render, 600);
 </script>
 </body>
 </html>
